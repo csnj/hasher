@@ -1,0 +1,6 @@
+/ logging
+_ check file exists
+_ show processing status
+_ add more algorithms
+_ modularize algorithms (enable third party)
+_ use multiple processes?
