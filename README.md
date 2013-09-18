@@ -30,7 +30,7 @@ Usage
 See Also
 ========
 
-* [The Case for Learning Python® for Malware Analysis][http://www.cloudshield.com/blog/advanced-malware/the-case-for-learning-python-for-malware-analysis/], CloudShield Blog
+* [The Case for Learning Python® for Malware Analysis](http://www.cloudshield.com/blog/advanced-malware/the-case-for-learning-python-for-malware-analysis/), CloudShield Blog
 
 Legal
 =====
