@@ -1,6 +1,10 @@
 / logging
 _ check file exists
 _ show processing status
-_ add more algorithms
+/ add more algorithms
+  / byte histogram
+  x entropy
+  _ bit image
+  _ fuzzy: ssdeep?
 _ modularize algorithms (enable third party)
 _ use multiple processes?

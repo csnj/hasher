@@ -8,7 +8,7 @@ Features
 
 * Low memory usage: reads each file one block at a time
 
-* Reads each file only once while running multiple hashing algorithms
+* Reads each file only once while running multiple algorithms, including MD5, SHA1, SHA256, SHA512, byte histogram, Shannon entropy
 
 * Uses worker threads to do multiple files at once
 

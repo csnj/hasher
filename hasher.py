@@ -6,7 +6,8 @@ Efficient hashing of multiple files
 
 Features:
 * Low memory usage: reads each file one block at a time
-* Reads each file only once while running multiple hashing algorithms
+* Reads each file only once while running multiple algorithms, including
+  MD5, SHA1, SHA256, SHA512, byte histogram, Shannon entropy
 * Uses worker threads to do multiple files at once
 * Provides a command line interface and a reusable object/module
 
@@ -29,6 +30,7 @@ Exports:
 import sys
 import hashlib
 import logging
+import math
 
 from Queue import Queue
 from threading import Thread
@@ -56,6 +58,8 @@ class File:
     self.result = 0
     self.report = filename
     self.size = 0
+    self.histogram = [0] * 256
+    self.entropy = 0.0
     self.ho = {}
     for h in self.hashes:
       self.ho[h] = hashlib.new(h)
@@ -68,19 +72,41 @@ class File:
     """
     if not self.result:
       fh = open(self.filename, 'rb')
+
       while 1:
-        b = fh.read(self.blocksize)
-        if not b:
+        block = fh.read(self.blocksize)
+        if not block:
           break
+
+        # Hashes
         for h in self.hashes:
-          self.ho[h].update(b)
-        self.size += len(b)
+          self.ho[h].update(block)
+
+        # Histogram
+        for char in block:
+          self.histogram[ord(char)] += 1
+
+        # Size
+        self.size += len(block)
+
       fh.close()
+
+      # Entropy
+      for f in self.histogram:
+        if f > 0:
+          freq = float(f) / self.size
+          self.entropy += freq * math.log(freq, 2)
+      self.entropy *= -1
+
       self.result = {}
+
     self.report += '%s%d' % (self.separator, self.size)
     for h in self.hashes:
       self.result[h] = self.ho[h].hexdigest()
       self.report += self.separator + self.result[h]
+    #self.report += self.separator + '%s' % self.histogram
+    self.report += self.separator + '%f' % self.entropy
+
     if p:
       print self.report
   
@@ -137,6 +163,8 @@ class Session:
     header = 'Filename%sSize' % self.separator
     for h in self.hashes:
       header += self.separator + h.upper()
+    #header += self.separator + 'Histogram'
+    header += self.separator + 'Entropy'
     print header
     self.hash(1);
 
